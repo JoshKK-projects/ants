@@ -16,6 +16,7 @@ var VIEWS = view;
 var SELF_SPOT = VIEWS[4];
 var TYPE = SELF_SPOT.ant.type;
 var ACTION = {};
+ACTION.cell = 4;//make sure always outputs something
 var FOOD = SELF_SPOT.ant.food;
 var SEEN_FOOD = false;
 var QUEEN_COLOR = 6;
@@ -31,8 +32,13 @@ function queen_logic(){
 	if(FOOD < Q_HUNGRY/* and some check to look out for spawned workers */){
 		return hungry_queen();
 	}
-	if(FOOD == 2 && NEARBY_ANTS.type[0] == 0){
-		
+	if((FOOD == 2 && NEARBY_ANTS.type[0] == 0) || (FOOD == 1 && NEARBY_ANTS.type[0] == 1) ){
+		for(var i=1;i<9;i+=2){
+			if(legal_move(i)){
+				ACTION.cell = i;
+				ACTION.type = 1
+			}
+		}
 	}
 	return ACTION;
 }
@@ -143,7 +149,7 @@ function count_ants(){
 		if(ant){
 			if(ant.friend){
 				ants.friend++;
-				ants.type[ant.type+1]++;
+				ants.type[ant.type+1]++;//BAD SYNTAX it seems FIX
 			}
 			else{
 				ants.foe++;
@@ -153,6 +159,8 @@ function count_ants(){
 			continue
 		}
 	}
+	console.log(ants);
+
 	NEARBY_ANTS = ants;
 }
 
